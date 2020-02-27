@@ -37,4 +37,5 @@ def inject_user():
     user = User.query.first()
     return dict(user=user)
 
+
 from watchlist import views,error,commands

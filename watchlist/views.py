@@ -28,7 +28,6 @@ def index():
     movies = Movie.query.all()
     return render_template('index.html', movies=movies)
 
-
 # 编辑电影信息页面
 @app.route('/movie/edit/<int:movie_id>', methods=['GET', 'POST'])
 @login_required
