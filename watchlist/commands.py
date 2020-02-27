@@ -17,18 +17,18 @@ def initdb(drop):
 @app.cli.command()
 def forge():
     db.create_all()
-    name = "Bruce"
+    name = "admin"
     movies = [
         {'title': '杀破狼', 'year': '2003'},
         {'title': '扫毒', 'year': '2018'},
-        {'title': '捉妖记', 'year': '2016'},
+        {'title': '釜山行', 'year': '2016'},
         {'title': '囧妈', 'year': '2020'},
         {'title': '葫芦娃', 'year': '1989'},
         {'title': '玻璃盒子', 'year': '2020'},
         {'title': '调酒师', 'year': '2020'},
         {'title': '釜山行', 'year': '2017'},
         {'title': '导火索', 'year': '2005'},
-        {'title': '叶问', 'year': '2015'}
+        {'title': '叶问4', 'year': '2015'}
     ]
     user = User(name=name)
     db.session.add(user)

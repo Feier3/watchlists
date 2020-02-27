@@ -8,7 +8,7 @@
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <link rel="shortcut icon" href="{{ url_for('static',filename='favicon.ico') }}" type="image/x-icon">
     <link rel="stylesheet" href="{{ url_for('static',filename='style.css') }}">
-    <title>{{ user.name }}'s 博客</title>
+    <title>{{ user.name }}的电影列表</title>
     {% endblock %}
 </head>
 
@@ -17,8 +17,8 @@
         <div class="alert">{{ message }}</div>
     {% endfor %}
     <h2>
-        <img class="avatar" src="{{ url_for('static',filename='images/4.jpg') }}" alt="头像">
-        {{ user.name }}'s 博客
+        <img class="avatar" src="{{ url_for('static',filename='images/1.jpg') }}" alt="头像">
+        {{ user.name }}的电影列表
     </h2>
     <nav>
         <ul>
