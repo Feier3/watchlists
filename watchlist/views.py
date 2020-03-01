@@ -1,7 +1,7 @@
 from watchlist import app, db
 from flask import request, redirect, url_for, flash, render_template
 from flask_login import login_user, logout_user, login_required, current_user
-from watchlist.models import User, Movie
+from watchlist.models import User, Ariticles
 
 
 # 首页
@@ -12,42 +12,50 @@ def index():
             return redirect(url_for('index'))
         # 获取表单的数据
         title = request.form.get('title')
-        year = request.form.get('year')
+        content = request.form.get('ckeditor').replace(' ','')
 
-        # 验证title，year不为空，并且title长度不大于60，year的长度不大于4
-        if not title or not year or len(year) > 4 or len(title) > 60:
+        # 验证title，content，并且title长度不大于60，content的长度不小于10
+        if not title or not content or len(content) < 10 or len(title) > 60:
             flash('输入错误')  # 错误提示
             return redirect(url_for('index'))  # 重定向回主页
 
-        movie = Movie(title=title, year=year)  # 创建记录
-        db.session.add(movie)  # 添加到数据库会话
+        article = Ariticles(title=title, content=content)  # 创建记录
+        db.session.add(article)  # 添加到数据库会话
         db.session.commit()  # 提交数据库会话
         flash('数据创建成功')
         return redirect(url_for('index'))
 
-    movies = Movie.query.all()
-    return render_template('index.html', movies=movies)
+    articles = Ariticles.query.all()
+    return render_template('index.html', articles=articles)
 
-# 编辑电影信息页面
-@app.route('/movie/edit/<int:movie_id>', methods=['GET', 'POST'])
+
+# 文章详情页面
+@app.route('/article/details/<int:article_id>', methods=['GET'])
+def details(article_id):
+    article = Ariticles.query.get_or_404(article_id)
+    return render_template('details.html', article=article)
+
+
+# 编辑博文页面
+@app.route('/article/edit/<int:article_id>', methods=['GET', 'POST'])
 @login_required
-def edit(movie_id):
-    movie = Movie.query.get_or_404(movie_id)
+def edit(article_id):
+    article = Ariticles.query.get_or_404(article_id)
 
     if request.method == 'POST':
         title = request.form['title']
-        year = request.form['year']
+        content = request.form['ckeditor']
 
-        if not title or not year or len(year) > 4 or len(title) > 60:
+        if not title or not content or len(content) < 10 or len(title) > 60:
             flash('输入错误')
-            return redirect(url_for('edit'), movie_id=movie_id)
+            return redirect(url_for('edit'), article_id=article.id)
 
-        movie.title = title
-        movie.year = year
+        article.title = title
+        article.content = content
         db.session.commit()
-        flash('电影信息已经更新')
+        flash('文章已经更新')
         return redirect(url_for('index'))
-    return render_template('edit.html', movie=movie)
+    return render_template('edit.html', article=article)
 
 
 @app.route('/settings', methods=['GET', 'POST'])
@@ -69,11 +77,11 @@ def settings():
 
 
 # 删除信息
-@app.route('/movie/delete/<int:movie_id>', methods=['POST'])
+@app.route('/article/delete/<int:article_id>', methods=['POST'])
 @login_required
-def delete(movie_id):
-    movie = Movie.query.get_or_404(movie_id)
-    db.session.delete(movie)
+def delete(article_id):
+    article = Ariticles.query.get_or_404(article_id)
+    db.session.delete(article)
     db.session.commit()
     flash('删除数据成功')
     return redirect(url_for('index'))
